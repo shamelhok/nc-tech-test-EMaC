@@ -16,5 +16,25 @@ async function getTemplates(){
    const templates= JSON.parse(prom)
    return templates
 }
+async function writeToCards(content) {
+    const data =await fsP.writeFile(__dirname+'/data/cards.json',content,'utf-8')
+    return data
+}
+async function addCard({title,basePrice,pages,sizes}) {
+    if(title&&basePrice!==undefined&&pages&&sizes){
+        let cards =await  getCards()
+        let cardIds= cards.map(x=>{
+            return parseInt(x.id.slice(4))
+        })
+        let newId=Math.max(...cardIds)
+        let id = "card"+((1000+newId).toString()).slice(1)
+        cards.push({
+            id,title,sizes,basePrice,pages
+        })
+        writeToCards(cards)
+    }else {
+        console.log("INVALID CARD");
+        return new Error("invalid card")}
+}
 
-export {getCards,getSizes,getTemplates}
+export {getCards,getSizes,getTemplates,writeToCards,addCard}

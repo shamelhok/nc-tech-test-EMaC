@@ -1,4 +1,4 @@
-import { getCards, getTemplates } from "./models";
+import { getCards, getTemplates, writeToCards } from "./models";
 
 async function getCardInfo(req, res) {
   // respond with a list of cards
@@ -21,6 +21,10 @@ async function getCardInfo(req, res) {
 async function getCardInfoById(req, res) {
   // respond with card by id
   let { cardId } = req.params;
+  if(!/card\d\d\d/.test(cardId)){
+    res.status(400).send({msg:"invalid card id"});
+    return
+  }
   let cards = await getCards();
   let templates = await getTemplates();
   let correctCard: { [k: string]: any } = {};
@@ -30,21 +34,30 @@ async function getCardInfoById(req, res) {
       break;
     }
   }
-  correctCard.card_id = correctCard.id;
-  delete correctCard.id;
-  correctCard.base_price = correctCard.basePrice;
-  delete correctCard.basePrice;
-  let { templateId } = correctCard.pages[0];
-  let correctTemplate = templates.filter((temp) => {
-    return temp.id === templateId;
-  })[0];
-  correctCard.imageUrl = correctTemplate.imageUrl;
-  const sizeKey={sm:"Small", md:"Medium",gt:"Giant"}
-  correctCard.availableSizes= correctCard.sizes.map((size=>{
-    return{id:size, title:sizeKey[size]}
-  }))
-  delete correctCard.sizes
-  res.status(200).send(correctCard);
+  if (correctCard.id) {
+    correctCard.card_id = correctCard.id;
+    delete correctCard.id;
+    correctCard.base_price = correctCard.basePrice;
+    delete correctCard.basePrice;
+    let { templateId } = correctCard.pages[0];
+    let correctTemplate = templates.filter((temp) => {
+      return temp.id === templateId;
+    })[0];
+    correctCard.imageUrl = correctTemplate.imageUrl;
+    const sizeKey = { sm: "Small", md: "Medium", gt: "Giant" };
+    correctCard.availableSizes = correctCard.sizes.map((size) => {
+      return { id: size, title: sizeKey[size] };
+    });
+    delete correctCard.sizes;
+    res.status(200).send(correctCard);
+  } else{
+    res.status(404).send({msg:"card not found"});
+  }
 }
+
+async function postCard(req,res) {
+    
+}
+
 
 export { getCardInfo, getCardInfoById };

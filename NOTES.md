@@ -1,1 +1,2 @@
-Please add any additional notes here…
+
+sizes.json is just a copy of cards.json
