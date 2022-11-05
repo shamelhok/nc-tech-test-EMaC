@@ -1,22 +1,6 @@
 import * as request from "supertest";
+import { addCard, writeToCards } from "../models";
 import { app } from "../server";
-import * as fsP from "fs/promises";
-
-const resetData = async () => {
-  await fsP.copyFile(
-    __dirname + "/../data/backup/cards.json",
-    __dirname + "/../data/cards.json"
-  );
-  await fsP.copyFile(
-    __dirname + "/../data/backup/sizes.json",
-    __dirname + "/../data/sizes.json"
-  );
-  await fsP.copyFile(
-    __dirname + "/../data/backup/templates.json",
-    __dirname + "/../data/templates.json"
-  );
-};
-// resetData()
 
 describe("get /cards", () => {
   test("returns array", async () => {
@@ -91,8 +75,37 @@ describe("get /cards/:cardId", () => {
   });
 });
 
-describe("post /cards",()=>{
-  test('should ', () => {
-    
-  });
-})
+// describe("post /cards",()=>{
+//   test('should add ', async() => {
+//     const response = await request(app).post("/cards").send(
+//       {
+//         "title": "example title",
+//         "sizes": [
+//           "sm",
+//           "md",
+//           "gt"
+//         ],
+//         "basePrice": 200,
+//         "pages": [
+//           {
+//             "title": "Front Cover",
+//             "templateId": "template001"
+//           },
+//           {
+//             "title": "Inside Left",
+//             "templateId": "template002"
+//           },
+//           {
+//             "title": "Inside Right",
+//             "templateId": "template003"
+//           },
+//           {
+//             "title": "Back Cover",
+//             "templateId": "template004"
+//           }
+//         ]
+//       }
+//     ).expect(201);
+//     expect(response.status).toBe(201)
+//   });
+// })

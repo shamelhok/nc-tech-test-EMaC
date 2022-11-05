@@ -1,4 +1,4 @@
-import { getCards, getTemplates, writeToCards } from "./models";
+import { addCard, getCards, getTemplates, writeToCards } from "./models";
 
 async function getCardInfo(req, res) {
   // respond with a list of cards
@@ -23,8 +23,7 @@ async function getCardInfoById(req, res) {
   let { cardId } = req.params;
   if(!/card\d\d\d/.test(cardId)){
     res.status(400).send({msg:"invalid card id"});
-    return
-  }
+  }else{
   let cards = await getCards();
   let templates = await getTemplates();
   let correctCard: { [k: string]: any } = {};
@@ -54,10 +53,25 @@ async function getCardInfoById(req, res) {
     res.status(404).send({msg:"card not found"});
   }
 }
+}
 
 async function postCard(req,res) {
-    
+    console.log(req.body);
+    try{
+        const {title,basePrice,pages,sizes}= req.body
+        if(typeof(title)=='string'
+        &&typeof(basePrice)=='number'
+        &&pages.length>0&& sizes.length>0){
+            const card =addCard({title,basePrice,pages,sizes})
+            res.status(201).send({msg:"new card added",
+            card})
+        }else{
+            res.status(400).send({msg:"invalid request"})
+        }
+    }catch{
+        res.status(400).send({msg:"invalid request"})
+    }
 }
 
 
-export { getCardInfo, getCardInfoById };
+export { getCardInfo, getCardInfoById ,postCard};
