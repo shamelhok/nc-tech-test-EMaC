@@ -20,16 +20,31 @@ async function getCardInfo(req, res) {
 
 async function getCardInfoById(req, res) {
   // respond with card by id
-  let {cardId}= req.params
-  let cards= await getCards()
-    let correctCard={}
-    for(let card of cards){
-        if(card.id===cardId){
-            correctCard= card
-            break;
-        }
-    };
-   res.status(200).send(correctCard);
+  let { cardId } = req.params;
+  let cards = await getCards();
+  let templates = await getTemplates();
+  let correctCard: { [k: string]: any } = {};
+  for (let card of cards) {
+    if (card.id === cardId) {
+      correctCard = card;
+      break;
+    }
+  }
+  correctCard.card_id = correctCard.id;
+  delete correctCard.id;
+  correctCard.base_price = correctCard.basePrice;
+  delete correctCard.basePrice;
+  let { templateId } = correctCard.pages[0];
+  let correctTemplate = templates.filter((temp) => {
+    return temp.id === templateId;
+  })[0];
+  correctCard.imageUrl = correctTemplate.imageUrl;
+  const sizeKey={sm:"Small", md:"Medium",gt:"Giant"}
+  correctCard.availableSizes= correctCard.sizes.map((size=>{
+    return{id:size, title:sizeKey[size]}
+  }))
+  delete correctCard.sizes
+  res.status(200).send(correctCard);
 }
 
 export { getCardInfo, getCardInfoById };
