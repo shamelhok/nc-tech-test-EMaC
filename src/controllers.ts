@@ -1,4 +1,4 @@
-import { addCard, getCards, getTemplates, writeToCards } from "./models";
+import { addCard, getCards, getTemplates, removeCard, writeToCards } from "./models";
 
 async function getCardInfo(req, res) {
   // respond with a list of cards
@@ -62,7 +62,8 @@ async function postCard(req,res) {
         if(typeof(title)=='string'
         &&typeof(basePrice)=='number'
         &&pages.length>0&& sizes.length>0){
-            const card =addCard({title,basePrice,pages,sizes})
+            const card = await addCard({title,basePrice,pages,sizes})
+
             res.status(201).send({msg:"new card added",
             card})
         }else{
@@ -72,6 +73,18 @@ async function postCard(req,res) {
         res.status(400).send({msg:"invalid request"})
     }
 }
+async function deleteCard(req,res){
+    const {cardId}= req.params
+    if(!/card\d\d\d/.test(cardId)){
+        res.status(400).send({msg:"invalid card id"});
+      }else{
+        let x =await removeCard(cardId)
+        if(x==404){
+            res.status(404).send({msg:"card not found"})
+        } else {
+            res.send(204).send({msg:"card deleted"})
+        }
+      }
+}
 
-
-export { getCardInfo, getCardInfoById ,postCard};
+export { getCardInfo, getCardInfoById ,postCard, deleteCard};

@@ -40,5 +40,16 @@ async function addCard({title,basePrice,pages,sizes}) {
         console.log("INVALID CARD");
         return new Error("invalid card")}
 }
+async function removeCard(cardId) {
+    let cards = await getCards()
+    let newCards = cards.filter(card=>{
+        return card.id!==cardId
+    })
+    if(cards.length===newCards.length){
+        return 404
+    }else{
+        return await writeToCards(JSON.stringify(newCards))
+    }
+}
 
-export {getCards,getSizes,getTemplates,writeToCards,addCard}
+export {getCards,getSizes,getTemplates,writeToCards,addCard, removeCard}

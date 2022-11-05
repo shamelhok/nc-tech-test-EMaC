@@ -1,6 +1,21 @@
 import * as request from "supertest";
-import { addCard, writeToCards } from "../models";
 import { app } from "../server";
+import * as fsP from "fs/promises"
+
+// beforeEach(async () => {
+//   await fsP.copyFile(
+//     __dirname + "/backup/cards.json",
+//     __dirname + "/cards.json"
+//   );
+//   await fsP.copyFile(
+//     __dirname + "/backup/sizes.json",
+//     __dirname + "/sizes.json"
+//   );
+//   await fsP.copyFile(
+//     __dirname + "/backup/templates.json",
+//     __dirname + "/templates.json"
+//   );
+// })
 
 describe("get /cards", () => {
   test("returns array", async () => {
@@ -107,5 +122,16 @@ describe("get /cards/:cardId", () => {
 //       }
 //     ).expect(201);
 //     expect(response.status).toBe(201)
+//   });
+// })
+
+
+
+// describe("delete /card/:cardId",()=>{
+//   test('should delete card', async() => {
+//     const response = await request(app).get("/cards");
+//     await request(app).delete("/cards/card001")
+//     const afterDelete = await request(app).get("/cards");
+//     expect(response.body.length).toBe(afterDelete.body.length)
 //   });
 // })

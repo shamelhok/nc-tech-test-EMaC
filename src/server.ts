@@ -1,5 +1,5 @@
 import * as express from "express";
-import { getCardInfo, getCardInfoById, postCard } from "./controllers";
+import { deleteCard, getCardInfo, getCardInfoById, postCard } from "./controllers";
 import { getCards, getSizes, getTemplates } from "./models";
 
 
@@ -13,3 +13,5 @@ app.get('/cards', getCardInfo)
 app.get('/cards/:cardId',getCardInfoById)
 
 app.post('/cards',postCard)
+
+app.delete('/cards/:cardId',deleteCard)
