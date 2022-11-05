@@ -1,5 +1,12 @@
 import * as request from "supertest";
 import { app } from "../server";
+import * as fsP from 'fs/promises'
+
+const resetData=async()=>{
+  await fsP.copyFile(__dirname+'/../data/backup/cards.json',__dirname+'/../data/cards.json')
+  await fsP.copyFile(__dirname+'/../data/backup/sizes.json',__dirname+'/../data/sizes.json')
+  await fsP.copyFile(__dirname+'/../data/backup/templates.json',__dirname+'/../data/templates.json')
+}
 
 describe("get /cards", () => {
   test("returns array", async () => {
